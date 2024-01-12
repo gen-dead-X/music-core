@@ -3,7 +3,7 @@ import 'reflect-metadata';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { Query, Resolver, buildSchema } from 'type-graphql';
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import config from './config/config';
 import Resolvers from '@resolvers/resolvers';
@@ -49,6 +49,22 @@ async function bootstrap() {
       context: async ({ req, res }) => ({ req, res }),
     })
   );
+
+  app.use((req, res, next) => {
+    res.status(404);
+    next(new Error('Not Found'));
+  });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    const status = res.statusCode === 200 ? 500 : res.statusCode;
+
+    res.status(status).send({
+      status: status,
+      message: err.message ?? 'Internal Server Error',
+      sucess: false,
+    });
+  });
 
   app.listen(config.PORT ?? 4040, () => {
     console.log(

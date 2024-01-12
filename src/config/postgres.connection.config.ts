@@ -1,10 +1,11 @@
 import { Client } from 'pg';
+import config from './config';
 
 const client = new Client({
   user: 'postgres',
-  host: 'localhost',
-  database: 'music',
-  password: 'balmerol',
+  host: config.HOST || 'localhost',
+  database: config.DATABASE_NAME || 'postgres',
+  password: config.DATABASE_PASSWORD || 'postgres',
   port: 5432,
 });
 
