@@ -35,5 +35,5 @@
     ],
     "@typescript-eslint/no-namespace": "off"
   },
-  "ignorePatterns": ["generated/client", "src/demo"]
+  "ignorePatterns": ["generated/client", "src/demo", "dist/", "build/"]
 }
