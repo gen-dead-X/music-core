@@ -1,16 +1,22 @@
-import { Field, Float, Int, ObjectType } from "type-graphql";
+import { Field, Float, Int, ObjectType } from 'type-graphql';
 
-@ObjectType({ description: "Object representing cooking recipe" })
+@ObjectType({ description: 'Object representing cooking recipe' })
 export class Recipe {
   @Field()
   title!: string;
 
-  @Field(_type => String, { nullable: true, deprecationReason: "Use 'description' field instead" })
+  @Field(_type => String, {
+    nullable: true,
+    deprecationReason: 'Use \'description\' field instead',
+  })
   get specification(): string | undefined {
     return this.description;
   }
 
-  @Field({ nullable: true, description: "The recipe description with preparation info" })
+  @Field({
+    nullable: true,
+    description: 'The recipe description with preparation info',
+  })
   description?: string;
 
   @Field(_type => [Int])
