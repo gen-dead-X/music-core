@@ -1,5 +1,5 @@
 import { UserResolvers } from './user/user.resolver';
 
-export default function allResolvers() {
+export default function Resolvers() {
   return [UserResolvers];
 }

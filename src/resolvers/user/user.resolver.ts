@@ -17,7 +17,7 @@ export class UserResolvers {
     @Ctx() ctx: { req: Request; res: Response }
   ) {
     console.log({ username, email, password });
-    console.log(ctx.req);
+    console.log(ctx.req.body);
 
     return {
       message: 'Hello',

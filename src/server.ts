@@ -7,7 +7,7 @@ import { RecipeResolver } from './recipe/recipe.resolver';
 import express from 'express';
 import cors from 'cors';
 import config from './config/config';
-import allResolvers from '@resolvers/allResolvers';
+import Resolvers from '@resolvers/resolvers';
 
 @Resolver()
 class HelloWorld {
@@ -16,7 +16,6 @@ class HelloWorld {
     return 'Hello World!';
   }
 }
-
 async function bootstrap() {
   const app = express();
 
@@ -35,7 +34,7 @@ async function bootstrap() {
   // });
 
   const schema = await buildSchema({
-    resolvers: [HelloWorld, RecipeResolver, ...allResolvers()],
+    resolvers: [HelloWorld, ...Resolvers()],
   });
 
   const server = new ApolloServer({
