@@ -3,11 +3,13 @@ import 'reflect-metadata';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { Query, Resolver, buildSchema } from 'type-graphql';
-import { RecipeResolver } from './recipe/recipe.resolver';
 import express from 'express';
 import cors from 'cors';
 import config from './config/config';
 import Resolvers from '@resolvers/resolvers';
+import connectToPostgres from '@config/postgres.connection.config';
+
+connectToPostgres();
 
 @Resolver()
 class HelloWorld {
@@ -21,8 +23,6 @@ async function bootstrap() {
 
   app.use(cors());
   app.use(express.json());
-
-  console.log(RecipeResolver);
 
   //  Build TypeGraphQL executable schema
   //  Test
