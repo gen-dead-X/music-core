@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import path from "path";
-// console.log(first)
 import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { Query, Resolver, buildSchema } from "type-graphql";
