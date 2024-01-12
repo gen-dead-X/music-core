@@ -25,6 +25,7 @@ async function bootstrap() {
   console.log(RecipeResolver);
 
   /* Build TypeGraphQL executable schema
+  Test
      const schema = await buildSchema({
       // Array of resolvers
       resolvers: [RecipeResolver],
