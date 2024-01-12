@@ -15,7 +15,9 @@
     "noImplicitAny": false,
     "baseUrl": ".",
     "paths": {
-      "*": ["src/*"]
+      "*": ["src/*"],
+      "@resolvers/*": ["src/resolvers/*"],
+      "@entities/*": ["src/entities/*"]
     },
     "outDir": "./dist",
     "emitDecoratorMetadata": true,

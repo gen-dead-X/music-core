@@ -7,6 +7,7 @@ import { RecipeResolver } from './recipe/recipe.resolver';
 import express from 'express';
 import cors from 'cors';
 import config from './config/config';
+import allResolvers from '@resolvers/allResolvers';
 
 @Resolver()
 class HelloWorld {
@@ -24,24 +25,31 @@ async function bootstrap() {
 
   console.log(RecipeResolver);
 
-  /* Build TypeGraphQL executable schema
-  Test
-     const schema = await buildSchema({
-      // Array of resolvers
-      resolvers: [RecipeResolver],
-      // Create 'schema.graphql' file with schema definition in current directory
-      emitSchemaFile: path.resolve(__dirname, "schema.graphql"),
-    }); */
+  //  Build TypeGraphQL executable schema
+  //  Test
+  // const schema = await buildSchema({
+  //   // Array of resolvers
+  //   resolvers: [HelloWorld, RecipeResolver, ...allResolvers()],
+  //   // Create 'schema.graphql' file with schema definition in current directory
+  //   emitSchemaFile: path.resolve(__dirname, 'schema.graphql'),
+  // });
 
   const schema = await buildSchema({
-    resolvers: [HelloWorld, RecipeResolver],
+    resolvers: [HelloWorld, RecipeResolver, ...allResolvers()],
   });
 
-  const server = new ApolloServer({ schema });
+  const server = new ApolloServer({
+    schema,
+  });
 
   await server.start();
 
-  app.use('/graphql', expressMiddleware(server));
+  app.use(
+    '/graphql',
+    expressMiddleware(server, {
+      context: async ({ req, res }) => ({ req, res }),
+    })
+  );
 
   app.listen(config.PORT ?? 4040, () => {
     console.log(
