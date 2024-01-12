@@ -1,0 +1,39 @@
+{
+  "env": {
+    "browser": false,
+    "es2022": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"],
+    "no-async-promise-executor": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error", // or "error"
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-implicit-any-catch": [
+      0,
+      {
+        "allowExplicitAny": true
+      }
+    ],
+    "@typescript-eslint/no-namespace": "off"
+  },
+  "ignorePatterns": ["generated/client", "src/demo", "dist/", "build/"]
+}

@@ -1,18 +1,18 @@
-import "reflect-metadata";
-import path from "path";
-import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@apollo/server/express4";
-import { Query, Resolver, buildSchema } from "type-graphql";
-import { RecipeResolver } from "./recipe/recipe.resolver";
-import express from "express";
-import cors from "cors";
-import config from "./config/config";
+import 'reflect-metadata';
+// import path from 'path';
+import { ApolloServer } from '@apollo/server';
+import { expressMiddleware } from '@apollo/server/express4';
+import { Query, Resolver, buildSchema } from 'type-graphql';
+import { RecipeResolver } from './recipe/recipe.resolver';
+import express from 'express';
+import cors from 'cors';
+import config from './config/config';
 
 @Resolver()
 class HelloWorld {
-  @Query(() => String, { name: "Hello" })
+  @Query(() => String, { name: 'Hello' })
   async helloWorld() {
-    return "Hello World!";
+    return 'Hello World!';
   }
 }
 
@@ -41,7 +41,7 @@ async function bootstrap() {
 
   await server.start();
 
-  app.use("/graphql", expressMiddleware(server));
+  app.use('/graphql', expressMiddleware(server));
 
   app.listen(config.PORT ?? 4040, () => {
     console.log(
