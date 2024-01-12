@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "TypeGraphQL Project",
   "main": "server.ts",
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "scripts": {
     "tsc": "tsc",
     "start": "npm run tsc && node ./dist/server.js",
