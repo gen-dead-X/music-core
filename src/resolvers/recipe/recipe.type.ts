@@ -7,7 +7,7 @@ export class Recipe {
 
   @Field(_type => String, {
     nullable: true,
-    deprecationReason: 'Use \'description\' field instead',
+    deprecationReason: 'Use "description" field instead',
   })
   get specification(): string | undefined {
     return this.description;

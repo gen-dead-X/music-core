@@ -13,9 +13,12 @@
     "noEmit": false,
     "strictNullChecks": true,
     "noImplicitAny": false,
-    "baseUrl": ".",
+    "baseUrl": "./src/",
     "paths": {
-      "*": ["src/*"]
+      "*": ["src/*"],
+      "@resolvers/*": ["resolvers/*"],
+      "@entities/*": ["entities/*"],
+      "@config/*": ["config/*"]
     },
     "outDir": "./dist",
     "emitDecoratorMetadata": true,

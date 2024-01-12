@@ -9,7 +9,8 @@
   "scripts": {
     "tsc": "tsc",
     "start": "npm run tsc && node ./dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "start:watch": "NODE_OPTIONS='-r tsconfig-paths/register' node dist/server.js",
+    "dev": "nodemon -r tsconfig-paths/register src/server.ts",
     "dev:dist": "nodemon dist/server.js",
     "browser:debug": "nodemon --inspect=9230 dist/server.js",
     "prisma:generate": "yarn prisma generate",
@@ -81,6 +82,7 @@
     "nodemon": "^3.0.2",
     "prettier": "^3.1.1",
     "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   },
   "peerDependencies": {
