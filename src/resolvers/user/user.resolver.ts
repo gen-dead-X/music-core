@@ -1,6 +1,10 @@
 import { Request, Response } from 'express';
 import { UserLogin, UserRegister } from '@entities/user/user.entity';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import UserValidator from '@validators/user/user.validator';
+import { ExceptionType } from '@enums/exception';
+
+const userValidator = new UserValidator();
 
 @Resolver()
 export class UserResolvers {
@@ -16,8 +20,15 @@ export class UserResolvers {
     @Arg('password') password: string,
     @Ctx() ctx: { req: Request; res: Response }
   ) {
-    console.log({ username, email, password });
-    console.log(ctx.req.body);
+    const isValid = await userValidator.registerValidator(ctx.req);
+
+    if (isValid instanceof Error) {
+      return {
+        type: ExceptionType.VALIDATION_ERROR,
+        message: isValid.message,
+        success: false,
+      };
+    }
 
     return {
       message: 'Hello',
