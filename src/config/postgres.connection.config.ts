@@ -6,7 +6,7 @@ const client = new Client({
   host: config.HOST || 'localhost',
   database: config.DATABASE_NAME || 'postgres',
   password: config.DATABASE_PASSWORD || 'postgres',
-  port: 5432,
+  port: config.DATABASE_PORT || 5432,
 });
 
 export default function connectToPostgres() {
