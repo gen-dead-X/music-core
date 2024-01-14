@@ -15,7 +15,6 @@
   },
   "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
-    "linebreak-style": ["error", "unix"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "no-async-promise-executor": "off",

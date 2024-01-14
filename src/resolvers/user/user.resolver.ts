@@ -1,6 +1,14 @@
 import { Request, Response } from 'express';
 import { UserLogin, UserRegister } from '@entities/user/user.entity';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import UserValidator from '@validators/user/user.validator';
+import { ExceptionType } from '@enums/exception';
+import CommonController from '@controllers/common/common.controllers';
+
+import { ApolloServerErrorCode } from '@apollo/server/errors';
+
+const userValidator = new UserValidator();
+const commonController = new CommonController();
 
 @Resolver()
 export class UserResolvers {
@@ -11,18 +19,44 @@ export class UserResolvers {
 
   @Mutation(() => UserRegister)
   async register(
-    @Arg('username') username: string,
+    @Arg('name') name: string,
     @Arg('email') email: string,
     @Arg('password') password: string,
     @Ctx() ctx: { req: Request; res: Response }
   ) {
-    console.log({ username, email, password });
-    console.log(ctx.req.body);
+    try {
+      const isValid = await userValidator.registerValidator(ctx.req);
 
-    return {
-      message: 'Hello',
-      success: true,
-    };
+      if (isValid instanceof Error) {
+        return {
+          type: ExceptionType.VALIDATION_ERROR,
+          message: isValid.message,
+          success: false,
+        };
+      }
+
+      const newUser = await commonController.register({
+        name,
+        email,
+        password,
+      });
+
+      if (newUser instanceof Error) {
+        ApolloServerErrorCode.INTERNAL_SERVER_ERROR;
+        return {
+          type: 'Internal Server Error', // TODO: Change this to 'ExceptionType.INTERNAL_SERVER_ERROR
+          message: newUser.message,
+          success: false,
+        };
+      }
+
+      return {
+        message: 'Hello',
+        success: true,
+      };
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   @Mutation(() => UserLogin)

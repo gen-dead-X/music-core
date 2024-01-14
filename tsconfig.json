@@ -18,7 +18,12 @@
       "*": ["src/*"],
       "@resolvers/*": ["resolvers/*"],
       "@entities/*": ["entities/*"],
-      "@config/*": ["config/*"]
+      "@config/*": ["config/*"],
+      "@enums/*": ["enums/*"],
+      "@validators/*": ["validators/*"],
+      "@helpers/*": ["helpers/*"],
+      "@middlewares/*": ["middlewares/*"],
+      "@controllers/*": ["controllers/*"]
     },
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
