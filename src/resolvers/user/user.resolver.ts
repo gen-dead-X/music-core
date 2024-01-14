@@ -48,7 +48,7 @@ export class UserResolvers {
       }
 
       return {
-        message: 'Hello',
+        message: 'User has been registered successfully!✅',
         success: true,
       };
     } catch (error) {
@@ -57,17 +57,37 @@ export class UserResolvers {
   }
 
   @Mutation(() => UserLogin)
-  async login(@Arg('email') email: string, @Arg('password') password: string) {
+  async login(
+    @Arg('email') email: string,
+    @Arg('password') password: string,
+    @Ctx() ctx: { req: Request; res: Response }
+  ) {
     console.log({ email, password });
-    const data = {
-      id: 'something',
-      username: 'Joy',
-      email: 'a@b.com',
-    };
+    const isValid = userValidator.loginValidator(ctx.req);
+
+    if (isValid instanceof Error) {
+      return {
+        type: ExceptionType.VALIDATION_ERROR,
+        message: isValid.message,
+        success: false,
+      };
+    }
+
+    const result = await commonController.login({ email, password });
+
+    console.log(result?.message);
+
+    if (!result || result instanceof Error) {
+      return {
+        type: 'Internal Server Error', // TODO: Change this to 'ExceptionType.INTERNAL_SERVER_ERROR
+        message: result?.message ?? 'User not found',
+        success: false,
+      };
+    }
 
     return {
-      data,
-      message: `Hello ${data.username}`,
+      data: result,
+      message: `Hello ${result.data.user.username}`,
       success: true,
     };
   }
