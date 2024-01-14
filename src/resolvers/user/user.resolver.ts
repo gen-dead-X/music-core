@@ -5,8 +5,6 @@ import UserValidator from '@validators/user/user.validator';
 import { ExceptionType } from '@enums/exception';
 import CommonController from '@controllers/common/common.controllers';
 
-import { ApolloServerErrorCode } from '@apollo/server/errors';
-
 const userValidator = new UserValidator();
 const commonController = new CommonController();
 
@@ -25,7 +23,7 @@ export class UserResolvers {
     @Ctx() ctx: { req: Request; res: Response }
   ) {
     try {
-      const isValid = await userValidator.registerValidator(ctx.req);
+      const isValid = userValidator.registerValidator(ctx.req);
 
       if (isValid instanceof Error) {
         return {
@@ -35,14 +33,13 @@ export class UserResolvers {
         };
       }
 
-      const newUser = await commonController.register({
+      const newUser = commonController.register({
         name,
         email,
         password,
       });
 
       if (newUser instanceof Error) {
-        ApolloServerErrorCode.INTERNAL_SERVER_ERROR;
         return {
           type: 'Internal Server Error', // TODO: Change this to 'ExceptionType.INTERNAL_SERVER_ERROR
           message: newUser.message,
