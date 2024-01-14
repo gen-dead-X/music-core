@@ -22,7 +22,8 @@
       "@enums/*": ["enums/*"],
       "@validators/*": ["validators/*"],
       "@helpers/*": ["helpers/*"],
-      "@middlewares/*": ["middlewares/*"]
+      "@middlewares/*": ["middlewares/*"],
+      "@controllers/*": ["controllers/*"]
     },
     "outDir": "./dist",
     "emitDecoratorMetadata": true,
