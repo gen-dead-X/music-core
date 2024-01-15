@@ -10,23 +10,45 @@ export class UserRegister {
 }
 
 @ObjectType()
-export class LoginData {
+export class UserData {
   @Field(() => String)
   id!: string;
 
   @Field(() => String)
-  username!: string;
+  name!: string;
 
   @Field(() => String)
   email!: string;
+}
 
-  password!: string;
+@ObjectType()
+class User {
+  @Field(() => UserData)
+  user!: UserData;
+
+  @Field(() => String)
+  accessToken!: string;
+
+  @Field(() => String)
+  refreshToken!: string;
 }
 
 @ObjectType()
 export class UserLogin {
-  @Field(() => LoginData, { nullable: true })
-  data?: LoginData;
+  @Field(() => User, { nullable: true })
+  data?: User;
+
+  @Field(() => String)
+  message!: string;
+
+  @Field(() => Boolean)
+  success!: boolean;
+}
+
+@ObjectType()
+export class AllUserDetails {
+  @Field(() => [UserData])
+  data?: Array<UserData>;
 
   @Field(() => String)
   message!: string;

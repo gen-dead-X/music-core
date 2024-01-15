@@ -1,29 +1,17 @@
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
 
 import prisma from '@config/prisma.config';
 import config from '@config/config';
-import { User } from '@prisma/client';
+import { ExceptionType } from '@enums/exception';
+import {
+  Login,
+  RegisterInput,
+  UserLogin,
+} from '../../types/controllers/common.controller.types';
+import { JWTCustomPayload } from '../../types/global.types';
 
-type RegisterInput = {
-  name: string;
-  email: string;
-  password: string;
-};
-type Login = {
-  email: string;
-  password: string;
-};
-type UserLogin = {
-  data: {
-    user: User;
-    accessToken: string;
-    refreshToken: string;
-  };
-  success: boolean;
-  message: string;
-};
-
-async function generateToken({ id }: { id: string }) {
+async function generateToken({ id }: JWTCustomPayload) {
   const accessToken = jwt.sign(
     { id },
     config.JWT_SECRET ?? Math.random().toString()
@@ -40,13 +28,22 @@ async function generateToken({ id }: { id: string }) {
 }
 
 export default class CommonController {
-  async register({ name, email, password }: RegisterInput) {
+  async register({
+    name,
+    email,
+    password,
+  }: RegisterInput): Promise<undefined | Error> {
     try {
+      const hashedPass = await bcrypt.hash(
+        password,
+        parseInt(config.SALT_VALUE ?? '10')
+      );
+
       const newUser = await prisma.user.create({
         data: {
           name,
           email,
-          password,
+          password: hashedPass,
         },
       });
 
@@ -54,14 +51,15 @@ export default class CommonController {
         throw new Error('User not created');
       }
     } catch (error) {
-      return error;
+      if (error instanceof Error) {
+        return error;
+      }
+
+      return new Error(ExceptionType.INTERNAL_SERVER_ERROR);
     }
   }
 
-  async login({
-    email,
-    password,
-  }: Login): Promise<UserLogin | Error | undefined> {
+  async login({ email, password }: Login): Promise<UserLogin | Error> {
     try {
       const user = await prisma.user.findUnique({
         where: {
@@ -73,21 +71,26 @@ export default class CommonController {
         throw new Error('User not found');
       }
 
-      if (user.password !== password) {
+      const doesPasswordMatches = await bcrypt.compare(password, user.password);
+
+      if (!doesPasswordMatches) {
         throw new Error('Incorrect password');
       }
 
       const token = await generateToken({ id: user.id });
 
+      console.log({ user, ...token });
+
       return {
-        data: { user, ...token },
-        success: true,
-        message: 'User has been logged in successfully!✅',
+        user,
+        ...token,
       };
     } catch (error) {
       if (error instanceof Error) {
         return error;
       }
+
+      return new Error(ExceptionType.INTERNAL_SERVER_ERROR);
     }
   }
 }

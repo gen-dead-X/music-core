@@ -7,11 +7,18 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
+enum UserType {
+    user
+    admin
+    staff
+}
+
 // Use UUID as the default ID
 model User {
     id       String   @id @default(uuid())
     email    String   @unique
     name     String
+    userType UserType @default(user)
     username String?
     age      Int?
     gender   String?
@@ -20,8 +27,13 @@ model User {
 }
 
 model Profile {
-    id     String @id @default(uuid())
-    bio    String
-    user   User   @relation(fields: [userId], references: [id])
-    userId String @unique
+    id               String  @id @default(uuid())
+    bio              String?
+    user             User    @relation(fields: [userId], references: [id])
+    userId           String  @unique
+    profileImage     String
+    profileImageName String
+    thumbnail        String
+    thumbnailName    String
+    private          Boolean @default(false)
 }

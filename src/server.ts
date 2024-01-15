@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-// import path from 'path';
+// uncomment this to create a new graphql file import path from 'path';
 import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
 import { Query, Resolver, buildSchema } from 'type-graphql';
@@ -8,6 +8,8 @@ import cors from 'cors';
 import config from './config/config';
 import Resolvers from '@resolvers/resolvers';
 import connectToPostgres from '@config/postgres.connection.config';
+import { ExceptionType } from '@enums/exception';
+import checkHeaderApp from '@middlewares/global/check.header.app.middleware';
 
 connectToPostgres();
 
@@ -35,6 +37,7 @@ async function bootstrap() {
 
   const schema = await buildSchema({
     resolvers: [HelloWorld, ...Resolvers()],
+    globalMiddlewares: [checkHeaderApp],
   });
 
   const server = new ApolloServer({
@@ -61,8 +64,8 @@ async function bootstrap() {
 
     res.status(status).send({
       status: status,
-      message: err.message ?? 'Internal Server Error',
-      sucess: false,
+      message: err.message ?? ExceptionType.INTERNAL_SERVER_ERROR,
+      success: false,
     });
   });
 
