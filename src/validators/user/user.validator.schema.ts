@@ -8,6 +8,7 @@ export const registerSchema = zod.object({
     .min(8)
     .refine(data => regex.PASSWORD.test(data)),
   name: zod.string().min(3),
+  phoneNumber: zod.string().length(10).regex(regex.PHONE_NUMBER),
 });
 
 export const loginSchema = zod.object({

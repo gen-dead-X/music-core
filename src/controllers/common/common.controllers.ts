@@ -32,6 +32,7 @@ export default class CommonController {
     name,
     email,
     password,
+    phoneNumber,
   }: RegisterInput): Promise<undefined | Error> {
     try {
       const hashedPass = await bcrypt.hash(
@@ -44,6 +45,7 @@ export default class CommonController {
           name,
           email,
           password: hashedPass,
+          phoneNumber,
         },
       });
 
@@ -78,8 +80,6 @@ export default class CommonController {
       }
 
       const token = await generateToken({ id: user.id });
-
-      console.log({ user, ...token });
 
       return {
         user,

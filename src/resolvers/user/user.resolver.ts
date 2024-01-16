@@ -21,6 +21,7 @@ export class UserResolvers {
     @Arg('name') name: string,
     @Arg('email') email: string,
     @Arg('password') password: string,
+    @Arg('phoneNumber') phoneNumber: string,
     @Ctx() ctx: { req: Request }
   ) {
     try {
@@ -38,6 +39,7 @@ export class UserResolvers {
         name,
         email,
         password,
+        phoneNumber,
       });
 
       if (newUser instanceof Error) {

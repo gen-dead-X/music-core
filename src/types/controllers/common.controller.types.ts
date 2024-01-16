@@ -4,7 +4,9 @@ export type RegisterInput = {
   name: string;
   email: string;
   password: string;
+  phoneNumber: string;
 };
+
 export type Login = {
   email: string;
   password: string;

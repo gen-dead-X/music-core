@@ -19,6 +19,9 @@ export class UserData {
 
   @Field(() => String)
   email!: string;
+
+  @Field(() => String)
+  userType!: string;
 }
 
 @ObjectType()

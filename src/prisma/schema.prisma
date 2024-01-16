@@ -15,15 +15,16 @@ enum UserType {
 
 // Use UUID as the default ID
 model User {
-    id       String   @id @default(uuid())
-    email    String   @unique
-    name     String
-    userType UserType @default(user)
-    username String?
-    age      Int?
-    gender   String?
-    password String
-    Profile  Profile?
+    id          String   @id @default(uuid())
+    email       String   @unique
+    name        String
+    phoneNumber String   @unique
+    userType    UserType @default(user)
+    username    String?
+    age         Int?
+    gender      String?
+    password    String
+    Profile     Profile?
 }
 
 model Profile {
