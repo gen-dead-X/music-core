@@ -1,11 +1,10 @@
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { UserLogin, UserRegister } from '@entities/user/user.entity';
 import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
 import UserValidator from '@validators/user/user.validator';
 import { ExceptionType } from '@enums/exception';
 import CommonController from '@controllers/common/common.controllers';
-
-import { ApolloServerErrorCode } from '@apollo/server/errors';
+import { handleResolverError } from '@helpers/resolver.helpers';
 
 const userValidator = new UserValidator();
 const commonController = new CommonController();
@@ -13,8 +12,8 @@ const commonController = new CommonController();
 @Resolver()
 export class UserResolvers {
   @Query(() => String)
-  async default() {
-    return 'Register Query';
+  async defaultUserQuery() {
+    return 'User Resolver';
   }
 
   @Mutation(() => UserRegister)
@@ -22,10 +21,11 @@ export class UserResolvers {
     @Arg('name') name: string,
     @Arg('email') email: string,
     @Arg('password') password: string,
-    @Ctx() ctx: { req: Request; res: Response }
+    @Arg('phoneNumber') phoneNumber: string,
+    @Ctx() ctx: { req: Request }
   ) {
     try {
-      const isValid = await userValidator.registerValidator(ctx.req);
+      const isValid = userValidator.registerValidator(ctx.req);
 
       if (isValid instanceof Error) {
         return {
@@ -39,39 +39,48 @@ export class UserResolvers {
         name,
         email,
         password,
+        phoneNumber,
       });
 
       if (newUser instanceof Error) {
-        ApolloServerErrorCode.INTERNAL_SERVER_ERROR;
-        return {
-          type: 'Internal Server Error', // TODO: Change this to 'ExceptionType.INTERNAL_SERVER_ERROR
-          message: newUser.message,
-          success: false,
-        };
+        throw new Error(newUser.message);
       }
 
       return {
-        message: 'Hello',
+        message: 'User has been registered successfully!✅',
         success: true,
       };
     } catch (error) {
-      console.log(error);
+      return handleResolverError(error);
     }
   }
 
   @Mutation(() => UserLogin)
-  async login(@Arg('email') email: string, @Arg('password') password: string) {
-    console.log({ email, password });
-    const data = {
-      id: 'something',
-      username: 'Joy',
-      email: 'a@b.com',
-    };
+  async login(
+    @Arg('email') email: string,
+    @Arg('password') password: string,
+    @Ctx() ctx: { req: Request }
+  ) {
+    try {
+      const isValid = userValidator.loginValidator(ctx.req);
 
-    return {
-      data,
-      message: `Hello ${data.username}`,
-      success: true,
-    };
+      if (isValid instanceof Error) {
+        throw new Error(isValid.message);
+      }
+
+      const result = await commonController.login({ email, password });
+
+      if (!result || result instanceof Error) {
+        throw new Error(result?.message ?? 'User not found');
+      }
+
+      return {
+        data: result,
+        message: `Hello ${result.user.name}`,
+        success: true,
+      };
+    } catch (error) {
+      return handleResolverError(error);
+    }
   }
 }

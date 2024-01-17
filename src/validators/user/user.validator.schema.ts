@@ -1,13 +1,17 @@
 import regex from '@enums/regex';
-import * as yup from 'yup';
+import { z as zod } from 'zod';
 
-export const registerSchema = yup.object().shape({
-  email: yup.string().required().matches(regex.EMAIL),
-  password: yup.string().min(8).required().matches(regex.PASSWORD),
-  name: yup.string().min(3).required().matches(regex.USERNAME),
+export const registerSchema = zod.object({
+  email: zod.string().refine(data => regex.EMAIL.test(data)),
+  password: zod
+    .string()
+    .min(8)
+    .refine(data => regex.PASSWORD.test(data)),
+  name: zod.string().min(3),
+  phoneNumber: zod.string().length(10).regex(regex.PHONE_NUMBER),
 });
 
-export const loginSchema = yup.object().shape({
-  email: yup.string().email().required(),
-  password: yup.string().required(),
+export const loginSchema = zod.object({
+  email: zod.string().email(),
+  password: zod.string(),
 });
