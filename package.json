@@ -42,7 +42,7 @@
   "dependencies": {
     "@apollo/client": "^3.8.8",
     "@apollo/server": "^4.10.0",
-    "@prisma/client": "^5.7.1",
+    "@prisma/client": "^5.8.1",
     "@types/jsonwebtoken": "^9.0.5",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",

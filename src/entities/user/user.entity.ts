@@ -22,6 +22,15 @@ export class UserData {
 
   @Field(() => String)
   userType!: string;
+
+  @Field(() => String, { nullable: true }) // Age is optional, adjust as needed
+  age?: number;
+
+  @Field(() => String, { nullable: true })
+  username?: string;
+
+  @Field(() => String, { nullable: true })
+  gender?: string;
 }
 
 @ObjectType()
@@ -55,6 +64,18 @@ export class AllUserDetails {
 
   @Field(() => String)
   message!: string;
+
+  @Field(() => Boolean)
+  success!: boolean;
+}
+
+@ObjectType()
+export class UserProfile {
+  @Field(() => UserData, { nullable: true })
+  data?: UserData;
+
+  @Field(() => String)
+  message?: string;
 
   @Field(() => Boolean)
   success!: boolean;

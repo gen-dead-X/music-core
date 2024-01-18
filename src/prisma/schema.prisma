@@ -10,6 +10,7 @@ datasource db {
 enum UserType {
     user
     admin
+    artist
     staff
 }
 

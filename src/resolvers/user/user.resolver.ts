@@ -1,19 +1,41 @@
 import { Request } from 'express';
-import { UserLogin, UserRegister } from '@entities/user/user.entity';
-import { Arg, Ctx, Mutation, Query, Resolver } from 'type-graphql';
+import {
+  UserLogin,
+  UserProfile,
+  UserRegister,
+} from '@entities/user/user.entity';
+import {
+  Arg,
+  Ctx,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from 'type-graphql';
 import UserValidator from '@validators/user/user.validator';
 import { ExceptionType } from '@enums/exception';
 import CommonController from '@controllers/common/common.controllers';
 import { handleResolverError } from '@helpers/resolver.helpers';
+import validateToken from '@middlewares/auth/validateToken.auth.middleware';
+import { Context } from '../../types/global.types';
 
 const userValidator = new UserValidator();
 const commonController = new CommonController();
 
 @Resolver()
 export class UserResolvers {
-  @Query(() => String)
-  async defaultUserQuery() {
-    return 'User Resolver';
+  @Query(() => UserProfile)
+  @UseMiddleware([validateToken])
+  async getProfile(@Ctx() ctx: Context) {
+    try {
+      console.log(ctx.req.body.userDetail);
+      return {
+        data: ctx.req.body.userDetails,
+        success: true,
+      };
+    } catch (error) {
+      return handleResolverError(error);
+    }
   }
 
   @Mutation(() => UserRegister)
