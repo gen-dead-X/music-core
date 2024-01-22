@@ -14,7 +14,6 @@ enum UserType {
     staff
 }
 
-// Use UUID as the default ID
 model User {
     id          String   @id @default(uuid())
     email       String   @unique
@@ -26,6 +25,8 @@ model User {
     gender      String?
     password    String
     Profile     Profile?
+    Track       Track[]
+    Album       Album[]
 }
 
 model Profile {
@@ -38,4 +39,36 @@ model Profile {
     thumbnail        String
     thumbnailName    String
     private          Boolean @default(false)
+}
+
+enum TRACK_PRIVACY {
+    private
+    restricted
+    public
+}
+
+model Track {
+    id               String        @id @default(uuid())
+    title            String
+    audioFile        String
+    artist           String
+    uploader         User          @relation(fields: [userId], references: [id])
+    userId           String
+    album            Album         @relation(fields: [albumId], references: [id])
+    albumId          String
+    genre            String
+    release          DateTime
+    albumArtWork     String?
+    albumArtWorkName String?
+    description      String?
+    tags             String[]
+    privacy          TRACK_PRIVACY @default(public)
+}
+
+model Album {
+    id      String  @id @default(uuid())
+    Track   Track[]
+    name    String
+    uploade User    @relation(fields: [userId], references: [id])
+    userId  String
 }

@@ -28,7 +28,6 @@ export class UserResolvers {
   @UseMiddleware([validateToken])
   async getProfile(@Ctx() ctx: Context) {
     try {
-      console.log(ctx.req.body.userDetail);
       return {
         data: ctx.req.body.userDetails,
         success: true,

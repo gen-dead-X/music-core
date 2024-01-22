@@ -20,4 +20,18 @@ export default class AdminController {
       return new Error(ExceptionType.INTERNAL_SERVER_ERROR);
     }
   }
+
+  async uploadTrack(data) {
+    try {
+      console.log(data);
+
+      return data;
+    } catch (error) {
+      if (error instanceof Error) {
+        return error;
+      }
+
+      return new Error(ExceptionType.INTERNAL_SERVER_ERROR);
+    }
+  }
 }
